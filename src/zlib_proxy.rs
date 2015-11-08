@@ -1,6 +1,7 @@
 use zlib_thread::ZlibCoprocessorCommand;
 use ZlibProxy;
 
+/// Zlib Proxy can be cloned to allow other threads to communicate with the Zlib Worker Thread.
 impl Clone for ZlibProxy {
     fn clone(&self) -> ZlibProxy {
         {
@@ -15,6 +16,8 @@ impl Clone for ZlibProxy {
     }
 }
 
+/// Drop is used to reference count the number of proxies referring to a given Zlib Worker Thread.
+/// Once the last proxy is dropped, the Zlib Worker Thread is sent a Quit message and it should exit.
 impl Drop for ZlibProxy {
     fn drop(& mut self) {
         let mut count = self.proxy_count.lock().unwrap();

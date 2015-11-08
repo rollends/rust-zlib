@@ -39,14 +39,14 @@ impl ZlibProxy {
         }
     }
 
-    /// Enqueues a compress job. Returns a receiver that can be used to listen for the result event.
+    /// Enqueues a compression job. Returns a receiver that can be used to listen for the result.
     pub fn compress( &self, input : Vec<u8> ) -> Receiver<ZlibEvent> {
         let (s,r) = channel();
         self.job_channel.send( zlib_thread::ZlibCoprocessorCommand::Compress(input, s) ).unwrap();
         r
     }
 
-    /// Enqueues a uncompress job. Returns a receiver that can be used to listen for the result event.
+    /// Enqueues an uncompression job. Returns a receiver that can be used to listen for the result.
     pub fn uncompress( &self, input : Vec<u8>, output_size : usize ) -> Receiver<ZlibEvent> {
         let (s,r) = channel();
         self.job_channel.send( zlib_thread::ZlibCoprocessorCommand::Uncompress(input, output_size, s) ).unwrap();
